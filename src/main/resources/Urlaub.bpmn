@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.37.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.7.0">
+  <bpmn:collaboration id="Collaboration_1uowvuc">
+    <bpmn:extensionElements />
+    <bpmn:participant id="Participant_1gjwfgb" name="Urlaubsantrag" processRef="Process_0k5mdnz" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_0k5mdnz" name="Urlaub" isExecutable="true">
+    <bpmn:extensionElements>
+      <zeebe:versionTag value="1.0" />
+    </bpmn:extensionElements>
+    <bpmn:sequenceFlow id="Flow_approve_end" sourceRef="Activity_0yzam3u" targetRef="Event_approved" />
+    <bpmn:sequenceFlow id="Flow_reject_end" sourceRef="Activity_18asg0p" targetRef="Event_rejected" />
+    <bpmn:endEvent id="Event_rejected" name="Urlaub abgelehnt">
+      <bpmn:incoming>Flow_reject_end</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="Event_approved" name="Urlaub genehmigt">
+      <bpmn:incoming>Flow_approve_end</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:startEvent id="StartEvent_1" name="Urlaub beantragen Start">
+      <bpmn:outgoing>Flow_1a83796</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="Activity_13o47gw" name="Urlaubsantrag ausfüllen (Mitarbeiter)">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:formDefinition formId="Urlaubsantrag-Form" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1a83796</bpmn:incoming>
+      <bpmn:outgoing>Flow_1m33v0p</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Activity_0yzam3u" name="Urlaub genehmigen">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="urlaub-genehmigen" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_00iy5be</bpmn:incoming>
+      <bpmn:outgoing>Flow_approve_end</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_18asg0p" name="Urlaub ablehnen">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="urlaub-ablehnen" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0wqixo4</bpmn:incoming>
+      <bpmn:outgoing>Flow_reject_end</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="GenugUrlaubstageuebrigGateway" name="Genug Urlaubstage übrig?">
+      <bpmn:incoming>Flow_1adqwvm</bpmn:incoming>
+      <bpmn:outgoing>Flow_00iy5be</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0wqixo4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="GetMitarbeiterDaten" name="Get Mitarbeiter Daten">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="get-mitarbeiter-daten" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1m33v0p</bpmn:incoming>
+      <bpmn:outgoing>Flow_1adqwvm</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_0mkjr8d" name="Urlaubstage zur Person nicht gefunden End Event">
+      <bpmn:incoming>Flow_1snz0b9</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:boundaryEvent id="Event_1x9imgm" attachedToRef="GetMitarbeiterDaten">
+      <bpmn:outgoing>Flow_1snz0b9</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1263rvw" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1a83796" sourceRef="StartEvent_1" targetRef="Activity_13o47gw" />
+    <bpmn:sequenceFlow id="Flow_1m33v0p" sourceRef="Activity_13o47gw" targetRef="GetMitarbeiterDaten" />
+    <bpmn:sequenceFlow id="Flow_00iy5be" name="Ja" sourceRef="GenugUrlaubstageuebrigGateway" targetRef="Activity_0yzam3u">
+      <bpmn:extensionElements />
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0wqixo4" name="Nein" sourceRef="GenugUrlaubstageuebrigGateway" targetRef="Activity_18asg0p">
+      <bpmn:extensionElements />
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1adqwvm" sourceRef="GetMitarbeiterDaten" targetRef="GenugUrlaubstageuebrigGateway" />
+    <bpmn:sequenceFlow id="Flow_1snz0b9" sourceRef="Event_1x9imgm" targetRef="Event_0mkjr8d" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1uowvuc">
+      <bpmndi:BPMNShape id="Participant_1gjwfgb_di" bpmnElement="Participant_1gjwfgb" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="1170" height="320" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="252" y="172" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="229" y="215" width="83" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1r2353b_di" bpmnElement="Activity_13o47gw">
+        <dc:Bounds x="340" y="150" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0yzam3u_di" bpmnElement="Activity_0yzam3u">
+        <dc:Bounds x="870" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_18asg0p_di" bpmnElement="Activity_18asg0p">
+        <dc:Bounds x="870" y="260" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0oj73qo_di" bpmnElement="GenugUrlaubstageuebrigGateway" isMarkerVisible="true">
+        <dc:Bounds x="765" y="165" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="760" y="115" width="60" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1encrej_di" bpmnElement="GetMitarbeiterDaten">
+        <dc:Bounds x="500" y="150" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0mkjr8d_di" bpmnElement="Event_0mkjr8d">
+        <dc:Bounds x="662" y="292" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="641" y="335" width="79" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1x9imgm_di" bpmnElement="Event_1x9imgm">
+        <dc:Bounds x="582" y="212" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1a83796_di" bpmnElement="Flow_1a83796">
+        <di:waypoint x="288" y="190" />
+        <di:waypoint x="340" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1m33v0p_di" bpmnElement="Flow_1m33v0p">
+        <di:waypoint x="440" y="190" />
+        <di:waypoint x="500" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00iy5be_di" bpmnElement="Flow_00iy5be">
+        <di:waypoint x="815" y="190" />
+        <di:waypoint x="870" y="190" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="837" y="172" width="12" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wqixo4_di" bpmnElement="Flow_0wqixo4">
+        <di:waypoint x="790" y="215" />
+        <di:waypoint x="790" y="300" />
+        <di:waypoint x="870" y="300" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="794" y="255" width="23" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1adqwvm_di" bpmnElement="Flow_1adqwvm">
+        <di:waypoint x="600" y="190" />
+        <di:waypoint x="765" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1snz0b9_di" bpmnElement="Flow_1snz0b9">
+        <di:waypoint x="600" y="248" />
+        <di:waypoint x="600" y="310" />
+        <di:waypoint x="662" y="310" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

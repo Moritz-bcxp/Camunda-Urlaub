@@ -1,0 +1,6 @@
+com\camunda\urlaub\service\MitarbeiterService.class
+com\camunda\urlaub\worker\UrlaubGenehmigungWorker.class
+com\camunda\urlaub\model\UrlaubsAntrag.class
+com\camunda\urlaub\UrlaubProcessApplication.class
+com\camunda\urlaub\controller\UrlaubController.class
+com\camunda\urlaub\worker\MitarbeiterDatenWorker.class

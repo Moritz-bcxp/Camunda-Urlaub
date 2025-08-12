@@ -1,0 +1,50 @@
+### Health Check
+GET http://localhost:8080/api/urlaub/health
+
+### Start Vacation Process - Max Mustermann (should be approved)
+POST http://localhost:8080/api/urlaub/start
+Content-Type: application/json
+
+{
+  "antragsteller": "Max Mustermann",
+  "tageAnzahl": 5,
+  "vonDatum": "2025-08-20",
+  "bisDatum": "2025-08-24",
+  "grund": "Erholung"
+}
+
+### Start Vacation Process - Max Mustermann (should be rejected - too many days)
+POST http://localhost:8080/api/urlaub/start
+Content-Type: application/json
+
+{
+  "antragsteller": "Max Mustermann",
+  "tageAnzahl": 30,
+  "vonDatum": "2025-09-01",
+  "bisDatum": "2025-09-30",
+  "grund": "Sabbatical"
+}
+
+### Start Vacation Process - Maxi Musterfrau (should be approved)
+POST http://localhost:8080/api/urlaub/start
+Content-Type: application/json
+
+{
+  "antragsteller": "Maxi Musterfrau",
+  "tageAnzahl": 10,
+  "vonDatum": "2025-08-15",
+  "bisDatum": "2025-08-25",
+  "grund": "Familienurlaub"
+}
+
+### Start Vacation Process - Unknown Employee (should trigger error boundary)
+POST http://localhost:8080/api/urlaub/start
+Content-Type: application/json
+
+{
+  "antragsteller": "Unknown Employee",
+  "tageAnzahl": 5,
+  "vonDatum": "2025-08-20",
+  "bisDatum": "2025-08-24",
+  "grund": "Test"
+}
