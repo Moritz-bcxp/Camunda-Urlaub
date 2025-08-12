@@ -1,18 +1,13 @@
 # Camunda 8 Configuration
 camunda:
   client:
-    mode: self-managed
-    zeebe:
-      enabled: true
-      base-url: http://localhost:26500
-      gateway-address: localhost:26500
-      security:
-        plaintext: true
-    operate:
-      base-url: http://localhost:8081
-    tasklist:
-      base-url: http://localhost:8082
-
+    mode: saas
+    auth:
+      client-id: TeipwtMaBZoMNqNG39~K0VM6MEfV9zSf
+      client-secret: J_8c44LIM3A~m.ZW-1zWlypK0WCqDLJ4w_gBkpN~rC5yXpph2Aow_gF6jj3vz7WP
+    cloud:
+      region: fra-1
+      cluster-id: 91025e8e-d8e5-41d9-ac77-1f2f7a4cbac4
 # Spring Configuration
 spring:
   application:
