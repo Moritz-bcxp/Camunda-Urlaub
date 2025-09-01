@@ -1,4 +1,4 @@
-# Camunda 8 Configuration
+# Camunda 8 SaaS Configuration
 camunda:
   client:
     mode: saas
@@ -6,12 +6,15 @@ camunda:
       client-id: TeipwtMaBZoMNqNG39~K0VM6MEfV9zSf
       client-secret: J_8c44LIM3A~m.ZW-1zWlypK0WCqDLJ4w_gBkpN~rC5yXpph2Aow_gF6jj3vz7WP
     cloud:
-      region: fra-1
       cluster-id: 91025e8e-d8e5-41d9-ac77-1f2f7a4cbac4
+      region: fra-1
+
 # Spring Configuration
 spring:
   application:
     name: urlaub-process
+  main:
+    allow-bean-definition-overriding: true
   datasource:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver

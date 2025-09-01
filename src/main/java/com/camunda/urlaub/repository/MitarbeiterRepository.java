@@ -27,9 +27,23 @@ public interface MitarbeiterRepository extends JpaRepository<Mitarbeiter, Long> 
     boolean existsByName(String name);
 
     /**
-     * Custom Query um Mitarbeiter mit genügend Urlaubstagen zu finden
+     * Prüft ob ein Mitarbeiter existiert anhand der Personalnummer
+     */
+    boolean existsByPersonalnummer(String personalnummer);
+
+    /**
+     * Custom Query um Mitarbeiter mit genügend Urlaubstagen zu finden (nach Name)
      */
     @Query("SELECT m FROM Mitarbeiter m WHERE m.name = :name AND m.verfuegbareUrlaubstage >= :benoetigteUrlaubstage")
     Optional<Mitarbeiter> findMitarbeiterMitGenugUrlaubstagen(@Param("name") String name,
+            @Param("benoetigteUrlaubstage") Integer benoetigteUrlaubstage);
+
+    /**
+     * Custom Query um Mitarbeiter mit genügend Urlaubstagen zu finden (nach
+     * Personalnummer)
+     */
+    @Query("SELECT m FROM Mitarbeiter m WHERE m.personalnummer = :personalnummer AND m.verfuegbareUrlaubstage >= :benoetigteUrlaubstage")
+    Optional<Mitarbeiter> findMitarbeiterMitGenugUrlaubstagenByPersonalnummer(
+            @Param("personalnummer") String personalnummer,
             @Param("benoetigteUrlaubstage") Integer benoetigteUrlaubstage);
 }

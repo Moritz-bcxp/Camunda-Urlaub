@@ -1,8 +1,10 @@
 com\camunda\urlaub\service\MitarbeiterService.class
+com\example\urlaubantrag\config\CamundaConfiguration.class
 com\camunda\urlaub\worker\UrlaubGenehmigungWorker.class
 com\camunda\urlaub\model\UrlaubsAntrag.class
 com\camunda\urlaub\UrlaubProcessApplication.class
 com\camunda\urlaub\config\DataInitializer.class
+com\camunda\urlaub\controller\MitarbeiterController.class
 com\camunda\urlaub\repository\MitarbeiterRepository.class
 com\camunda\urlaub\controller\UrlaubController.class
 com\camunda\urlaub\model\Mitarbeiter.class

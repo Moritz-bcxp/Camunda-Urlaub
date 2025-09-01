@@ -1,12 +1,14 @@
 package com.camunda.urlaub.worker;
 
 import com.camunda.urlaub.service.MitarbeiterService;
+import io.camunda.zeebe.client.ZeebeClient;
 import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.client.api.worker.JobClient;
-import io.camunda.zeebe.spring.client.annotation.JobWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -19,7 +21,23 @@ public class MitarbeiterDatenWorker {
     @Autowired
     private MitarbeiterService mitarbeiterService;
 
-    @JobWorker(type = "get-mitarbeiter-daten")
+    @Autowired(required = false)
+    private ZeebeClient camundaClient;
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void startWorker() {
+        if (camundaClient != null) {
+            LOGGER.info("🚀 Starting Mitarbeiter Data Worker...");
+            camundaClient.newWorker()
+                    .jobType("get-mitarbeiter-daten")
+                    .handler(this::getMitarbeiterDaten)
+                    .open();
+            LOGGER.info("✅ Mitarbeiter Data Worker started successfully!");
+        } else {
+            LOGGER.warn("⚠️  Camunda client not available - Mitarbeiter Data Worker not started");
+        }
+    }
+
     public void getMitarbeiterDaten(final JobClient client, final ActivatedJob job) {
         LOGGER.info("Processing job: {}", job.getKey());
 

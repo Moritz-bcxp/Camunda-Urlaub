@@ -19,7 +19,7 @@ public class UrlaubController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UrlaubController.class);
 
     @Autowired
-    private ZeebeClient zeebeClient;
+    private ZeebeClient camundaClient;
 
     @PostMapping("/start")
     public ResponseEntity<Map<String, Object>> startUrlaubProcess(@RequestBody UrlaubsAntrag urlaubsAntrag) {
@@ -33,7 +33,7 @@ public class UrlaubController {
             variables.put("urlaub_bisDatum", urlaubsAntrag.getBisDatum());
             variables.put("urlaub_grund", urlaubsAntrag.getGrund());
 
-            ProcessInstanceEvent processInstance = zeebeClient.newCreateInstanceCommand()
+            ProcessInstanceEvent processInstance = camundaClient.newCreateInstanceCommand()
                     .bpmnProcessId("Process_0k5mdnz")
                     .latestVersion()
                     .variables(variables)
